@@ -1,7 +1,5 @@
 if game.PlaceId == 8448881160 then
-    game:GetService("ReplicatedStorage").Remotes.Teleport:InvokeServer("Park")
-    queue_on_teleport([[loadstring(request(Url = "https://raw.githubusercontent.com/danaewgg/ball-game/main/Park.lua").Body))()]])
-    return
+    return game:GetService("ReplicatedStorage").Remotes.Teleport:InvokeServer("Park"), queue_on_teleport([[loadstring(request(Url = "https://raw.githubusercontent.com/danaewgg/ball-game/main/Park.lua").Body)()]])
 end
 
 local Players = game:GetService("Players")
