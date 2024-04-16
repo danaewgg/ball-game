@@ -19,7 +19,7 @@ end
 
 Players.LocalPlayer.OnTeleport:Connect(function()
     clear_teleport_queue()
-    queue_on_teleport([[loadstring(request(Url = "https://raw.githubusercontent.com/danaewgg/ball-game/main/Park.lua").Body))()]])
+    queue_on_teleport([[loadstring(request(Url = "https://raw.githubusercontent.com/danaewgg/ball-game/main/Park.lua").Body)()]])
 end)
 
 for _, player in next, Players:GetPlayers() do
