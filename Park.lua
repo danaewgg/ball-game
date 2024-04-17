@@ -20,8 +20,8 @@ local function SendMessageToWebhook(message)
     })
 end
 
-Players.LocalPlayer.OnTeleport:Connect(function()
-    rconsoleprint("Debug - OnTeleport connection triggered")
+Players.LocalPlayer.OnTeleport:Connect(function(teleportState)
+    rconsoleprint(`Debug - OnTeleport connection triggered with state "{teleportState}"`)
     clear_teleport_queue()
     queue_on_teleport([[loadstring(request({Url = "https://raw.githubusercontent.com/danaewgg/ball-game/main/Park.lua"}).Body)()]])
     rconsoleprint("Debug - End of function connected to OnTeleport")
