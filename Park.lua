@@ -15,7 +15,10 @@ local playersInServer = Players:GetPlayers()
 
 if #playersInServer <= 1 then -- '<=' is faster than just '<' from my testing
     rconsoleprint("Debug - Identified fresh park, performing safety checks")
-    game.Loaded:Wait() -- I'm assuming the game hasn't loaded yet
+    local startTime = os.time()
+    repeat
+        task.wait()
+    until os.time() - startTime >= 15 or LocalPlayer.Character
     if LocalPlayer.Character then return rconsoleprint("Debug - All checks passed, returning script") end
 
     rconsoleprint("Debug - The game seems to have loaded but the player's character hasn't spawned?")
