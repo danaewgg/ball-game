@@ -1,4 +1,4 @@
-rconsoleprint("Checkpoint 1 - Executed")
+rconsoleprint("Checkpoint 1 - Script ran")
 
 if game.PlaceId == 8448881160 then
     rconsoleprint("Debug - Teleporting to park")
@@ -22,7 +22,8 @@ end
 
 Players.LocalPlayer.OnTeleport:Connect(function(teleportState)
     rconsoleprint(`Debug - OnTeleport connection triggered with state "{teleportState}"`)
-    clear_teleport_queue()
+    if teleportState ~= Enum.TeleportState.InProgress then return end
+    rconsoleprint("Debug - Queueing script execution...")
     queue_on_teleport([[loadstring(request({Url = "https://raw.githubusercontent.com/danaewgg/ball-game/main/Park.lua"}).Body)()]])
     rconsoleprint("Debug - End of function connected to OnTeleport")
 end)
@@ -35,4 +36,4 @@ for _, player in next, Players:GetPlayers() do
     end
 end
 
-rconsoleprint("Debug - Finished executing script")
+rconsoleprint("Debug - Script finished executing")
