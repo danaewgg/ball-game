@@ -1,39 +1,49 @@
 rconsoleprint("Checkpoint 1 - Script ran")
 
 if game.PlaceId == 8448881160 then
-    rconsoleprint("Debug - Teleporting to park")
+    rconsoleprint("Debug - Player is in plaza, teleporting to park")
     return game:GetService("ReplicatedStorage").Remotes.Teleport:InvokeServer("Park"), queue_on_teleport([[loadstring(request({Url = "https://raw.githubusercontent.com/danaewgg/ball-game/main/Park.lua"}).Body)()]])
 end
 
-rconsoleprint("Checkpoint 2 - Not in plaza, running code")
+rconsoleprint("Checkpoint 2 - Park matched, running code")
 
-local Players = game:GetService("Players")
 local HttpService = game:GetService("HttpService")
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local playersInServer = Players:GetPlayers()
 
--- I've thought about caching the request arguments, but looking at my code above makes me think it won't make sense, it's already having to get game.PlaceId, and I can't cache that, so it'll slow down execution anyway
+local URL = "https://discord.com/api/webhooks/1229721351124942941/OciXX8P6Bky_yp4T9LHSaUClTOuhFVEDyGUHvfCQvrq2zYa8Ory-HepwWGKIn38o5KKy" -- I know
+local METHOD = "POST"
+local HEADERS = {["Content-Type"] = "application/json"}
 local function SendMessageToWebhook(message)
-    local response = request({
-        Url = "https://discord.com/api/webhooks/1229721351124942941/OciXX8P6Bky_yp4T9LHSaUClTOuhFVEDyGUHvfCQvrq2zYa8Ory-HepwWGKIn38o5KKy", -- I know
-        Method = "POST",
+    request({
+        Url = URL,
+        Method = METHOD,
         Body = HttpService:JSONEncode({content = message}),
-        Headers = {["Content-Type"] = "application/json"}
+        Headers = HEADERS
     })
 end
 
-Players.LocalPlayer.OnTeleport:Connect(function(teleportState)
-    rconsoleprint(`Debug - OnTeleport connection triggered with state "{teleportState}"`)
-    if teleportState ~= Enum.TeleportState.InProgress then return end
-    rconsoleprint("Debug - Queueing script execution...")
+LocalPlayer.OnTeleport:Connect(function(teleportState)
+    rconsoleprint(`Debug - OnTeleport triggered with state "{teleportState}"`)
+    if teleportState ~= Enum.TeleportState.InProgress or #playersInServer <= 1 then return end -- '<=' is slightly faster than just '<' from my testing
+
+    rconsoleprint("Debug - Queueing script execution")
     queue_on_teleport([[loadstring(request({Url = "https://raw.githubusercontent.com/danaewgg/ball-game/main/Park.lua"}).Body)()]])
-    rconsoleprint("Debug - End of function connected to OnTeleport")
+    rconsoleprint("Debug - OnTeleport function finished running")
 end)
 
 rconsoleprint("Checkpoint 3 - Ready for main loop")
 
-for _, player in next, Players:GetPlayers() do
-    if player ~= Players.LocalPlayer then -- Faster than a guard clause with continue
+if #playersInServer <= 1 then return end -- Stop the script if the park is fresh, so we don't teleport back when we choose to leave
+
+for _, player in next, playersInServer do
+    if player ~= LocalPlayer then -- Faster than a guard clause with continue
         SendMessageToWebhook(`block {player.UserId}`) -- Thought of using task.spawn, but it's just an unnecessary function call, as I won't be checking the response after the request
     end
 end
 
+game:GetService("ReplicatedStorage").Remotes.Teleport:InvokeServer("Plaza") -- If we aren't teleported out ourselves (presumably in a big park)
+
+rconsoleprint("Debug - Main loop done")
 rconsoleprint("Debug - Script finished executing")
