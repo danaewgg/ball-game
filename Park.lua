@@ -1,6 +1,10 @@
+rconsoleprint("Checkpoint 1 - Executed")
+
 if game.PlaceId == 8448881160 then
     return game:GetService("ReplicatedStorage").Remotes.Teleport:InvokeServer("Park"), queue_on_teleport([[loadstring(request({Url = "https://raw.githubusercontent.com/danaewgg/ball-game/main/Park.lua"}).Body)()]])
 end
+
+rconsoleprint("Checkpoint 2 - Not in plaza, running code")
 
 local Players = game:GetService("Players")
 local HttpService = game:GetService("HttpService")
@@ -16,12 +20,18 @@ local function SendMessageToWebhook(message)
 end
 
 Players.LocalPlayer.OnTeleport:Connect(function()
+    rconsoleprint("Debug - OnTeleport connection triggered")
     clear_teleport_queue()
     queue_on_teleport([[loadstring(request({Url = "https://raw.githubusercontent.com/danaewgg/ball-game/main/Park.lua"}).Body)()]])
+    rconsoleprint("Debug - End of function connected to OnTeleport")
 end)
+
+rconsoleprint("Checkpoint 3 - Ready for main loop")
 
 for _, player in next, Players:GetPlayers() do
     if player ~= Players.LocalPlayer then -- Faster than a guard clause with continue
         SendMessageToWebhook(`block {player.UserId}`) -- Thought of using task.spawn, but it's just an unnecessary function call, as I won't be checking the response after the request
     end
 end
+
+rconsoleprint("Debug - Finished executing script")
