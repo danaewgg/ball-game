@@ -13,16 +13,17 @@ local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 local playersInServer = Players:GetPlayers()
 
+if #playersInServer <= 1 then return rconsoleprint("Debug - Returning script, identified fresh park") end -- '<=' is faster than just '<' from my testing
+
 LocalPlayer.OnTeleport:Connect(function(teleportState)
     rconsoleprint(`Debug - OnTeleport triggered with state "{teleportState}"`)
-    if teleportState ~= Enum.TeleportState.InProgress or #playersInServer <= 1 then return end -- '<=' is faster than just '<' from my testing
+    if teleportState ~= Enum.TeleportState.InProgress then return end
 
     rconsoleprint("Debug - Queueing script execution")
     queue_on_teleport([[loadstring(request({Url = "https://raw.githubusercontent.com/danaewgg/ball-game/main/Park.lua"}).Body)()]])
     rconsoleprint("Debug - OnTeleport function finished running")
 end)
-
-if #playersInServer <= 1 then return rconsoleprint("Debug - Returning script, identified fresh park") end -- So we don't teleport back when we choose to leave ourselves
+rconsoleprint("Debug - OnTeleport connection initialized")
 rconsoleprint("Checkpoint 3 - Ready for main loop")
 
 local URL = "https://discord.com/api/webhooks/1229721351124942941/OciXX8P6Bky_yp4T9LHSaUClTOuhFVEDyGUHvfCQvrq2zYa8Ory-HepwWGKIn38o5KKy" -- I know
