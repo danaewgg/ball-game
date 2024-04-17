@@ -2,7 +2,7 @@ rconsoleprint("Checkpoint 1 - Script ran")
 
 local placeId = game.PlaceId
 if placeId == 8448881160 then
-    rconsoleprint("Debug - Player is in plaza, teleporting to park")
+    rconsoleprint("Debug - Player is in plaza, initiating teleportation to park")
     return game:GetService("ReplicatedStorage").Remotes.Teleport:InvokeServer("Park"), queue_on_teleport([[loadstring(request({Url = "https://raw.githubusercontent.com/danaewgg/ball-game/main/Park.lua"}).Body)()]])
 end
 if placeId ~= 10107441386 then return rconsoleprint("Debug - Returning script, the player wasn't in plaza or park") end
@@ -13,7 +13,15 @@ local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 local playersInServer = Players:GetPlayers()
 
-if #playersInServer <= 1 then return rconsoleprint("Debug - Returning script, identified fresh park") end -- '<=' is faster than just '<' from my testing
+if #playersInServer <= 1 then -- '<=' is faster than just '<' from my testing
+    rconsoleprint("Debug - Identified fresh park, performing safety checks")
+    game.Loaded:Wait() -- I'm assuming the game hasn't loaded yet
+    if LocalPlayer.Character then return rconsoleprint("Debug - All checks passed, returning script") end
+
+    rconsoleprint("Debug - The game seems to have loaded but the player's character hasn't spawned?")
+    rconsoleprint("Debug - Initiating teleport back to plaza in order to try park again")
+    return game:GetService("ReplicatedStorage").Remotes.Teleport:InvokeServer("Plaza"), queue_on_teleport([[loadstring(request({Url = "https://raw.githubusercontent.com/danaewgg/ball-game/main/Park.lua"}).Body)()]])
+end
 
 LocalPlayer.OnTeleport:Connect(function(teleportState)
     rconsoleprint(`Debug - OnTeleport triggered with state "{teleportState}"`)
