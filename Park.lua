@@ -15,13 +15,15 @@ local playersInServer = Players:GetPlayers()
 
 if #playersInServer <= 1 then -- '<=' is faster than just '<' from my testing
     rconsoleprint("Debug - Identified fresh park, performing safety checks")
-    local startTime = os.time()
+    local elapsedTime = 0
     repeat
-        task.wait()
-    until os.time() - startTime >= 15 or LocalPlayer.Character
+        task.wait(1)
+        elapsedTime += 1
+    until elapsedTime >= 15 or LocalPlayer.Character
     if LocalPlayer.Character then return rconsoleprint("Debug - All checks passed, returning script") end
 
-    rconsoleprint("Debug - The game seems to have loaded but the player's character hasn't spawned?")
+    -- I don't think this fixes it, might try going to Main Menu and then continuing from there
+    rconsoleprint("Debug - The game seems to have loaded, but the player hasn't spawned in?")
     rconsoleprint("Debug - Initiating teleport back to plaza in order to try park again")
     return game:GetService("ReplicatedStorage").Remotes.Teleport:InvokeServer("Plaza"), queue_on_teleport([[loadstring(request({Url = "https://raw.githubusercontent.com/danaewgg/ball-game/main/Park.lua"}).Body)()]])
 end
