@@ -1,3 +1,6 @@
+local function rconsoleprint(...)
+    getgenv().rconsoleprint(`{os.date("%I:%M:%S %p")} | {...}`)
+end
 rconsoleprint("Checkpoint 1 - Script ran")
 
 local placeId = game.PlaceId
