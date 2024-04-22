@@ -1,3 +1,5 @@
+if not game:IsLoaded() then game.Loaded:Wait() end
+
 local function rconsoleprint(...)
     getgenv().rconsoleprint(`{os.date("%I:%M:%S %p")} | {...}`)
 end
@@ -5,7 +7,7 @@ rconsoleprint("Checkpoint 1 - Script ran")
 
 local placeId = game.PlaceId
 if placeId == 8448881160 then
-    rconsoleprint("Debug - Player is in plaza, initiating teleport to park")
+    rconsoleprint("Debug - Player is in plaza, initiating teleport to park...")
     return game:GetService("ReplicatedStorage").Remotes.Teleport:InvokeServer("Park"), queue_on_teleport([[loadstring(request({Url = "https://raw.githubusercontent.com/danaewgg/ball-game/main/FreshPark.lua"}).Body)()]])
 end
 if placeId ~= 10107441386 then return rconsoleprint("Debug - Returning script, the player wasn't in plaza or park") end
@@ -17,7 +19,7 @@ local LocalPlayer = Players.LocalPlayer
 local playersInServer = Players:GetPlayers()
 
 if #playersInServer <= 1 then -- '<=' is faster than just '<' from my testing
-    rconsoleprint(`Debug - Identified fresh park ({#playersInServer} player(s)), performing safety checks`)
+    rconsoleprint(`Debug - Identified fresh park (no other players in server), performing safety checks`)
     local elapsedTime = 0
     repeat
         task.wait(1)
@@ -27,7 +29,7 @@ if #playersInServer <= 1 then -- '<=' is faster than just '<' from my testing
 
     -- I don't think this fixes it, might try going to Main Menu and then continuing from there
     rconsoleprint("Debug - The game seems to have loaded, but the player hasn't spawned in?")
-    rconsoleprint("Debug - Initiating teleport back to plaza in order to try park again")
+    rconsoleprint("Debug - Initiating teleport back to plaza in order to try park again...")
     return game:GetService("ReplicatedStorage").Remotes.Teleport:InvokeServer("Plaza"), queue_on_teleport([[loadstring(request({Url = "https://raw.githubusercontent.com/danaewgg/ball-game/main/FreshPark.lua"}).Body)()]])
 end
 
@@ -37,7 +39,7 @@ LocalPlayer.OnTeleport:Connect(function(teleportState)
 
     rconsoleprint("Debug - Queueing script execution")
     queue_on_teleport([[loadstring(request({Url = "https://raw.githubusercontent.com/danaewgg/ball-game/main/FreshPark.lua"}).Body)()]])
-    rconsoleprint("Debug - OnTeleport function finished running")
+    rconsoleprint("Debug - OnTeleport function complete")
 end)
 rconsoleprint("Debug - OnTeleport connection initialized")
 rconsoleprint("Checkpoint 3 - Ready for main loop")
@@ -61,4 +63,4 @@ end
 game:GetService("ReplicatedStorage").Remotes.Teleport:InvokeServer("Plaza") -- If we aren't teleported out ourselves (presumably in a big park)
 
 rconsoleprint("Debug - Main loop done")
-rconsoleprint("Debug - Script finished executing")
+rconsoleprint("Debug - Script finished execution")
