@@ -17,7 +17,7 @@ local LocalPlayer = Players.LocalPlayer
 local playersInServer = Players:GetPlayers()
 
 if #playersInServer <= 1 then -- '<=' is faster than just '<' from my testing
-    rconsoleprint("Debug - Identified fresh park, performing safety checks")
+    rconsoleprint(`Debug - Identified fresh park ({#playersInServer} player(s)), performing safety checks`)
     local elapsedTime = 0
     repeat
         task.wait(1)
